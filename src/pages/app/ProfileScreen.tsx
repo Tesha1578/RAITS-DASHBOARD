@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { Wallet, Star, Clock, Route, ChevronRight, Settings, ShieldCheck, Headphones, LogOut } from 'lucide-react'
+import { Wallet, Star, Clock, Route, ChevronRight, Settings, ShieldCheck, Headphones, LogOut, Info, Car } from 'lucide-react'
 import StatusBar from '../../components/StatusBar'
 import { TRIPS } from '../../lib/data'
 
 export default function ProfileScreen() {
   const nav = useNavigate()
+  const [showAbout, setShowAbout] = useState(false)
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="relative flex h-full flex-col">
       <StatusBar />
 
       {/* profile header */}
@@ -91,22 +93,72 @@ export default function ProfileScreen() {
             { icon: Settings, label: 'Settings' },
             { icon: ShieldCheck, label: 'Safety & SOS contacts' },
             { icon: Headphones, label: 'Help & Support' },
+            { icon: Info, label: 'About Driver Link Pro', action: () => setShowAbout(true) },
           ].map((item) => {
             const Icon = item.icon
             return (
-              <button key={item.label} className="flex w-full items-center gap-3 px-4 py-3.5">
+              <button 
+                key={item.label} 
+                onClick={item.action}
+                className="flex w-full items-center gap-3 px-4 py-3.5 hover:bg-white/5 transition-colors"
+              >
                 <Icon className="h-4 w-4 text-white/50" />
                 <span className="flex-1 text-left text-[13px] font-semibold text-white">{item.label}</span>
                 <ChevronRight className="h-4 w-4 text-white/25" />
               </button>
             )
           })}
-          <button onClick={() => nav('/')} className="flex w-full items-center gap-3 px-4 py-3.5">
+          <button onClick={() => nav('/')} className="flex w-full items-center gap-3 px-4 py-3.5 hover:bg-white/5 transition-colors">
             <LogOut className="h-4 w-4 text-red-400" />
             <span className="flex-1 text-left text-[13px] font-semibold text-red-400">Log out</span>
           </button>
         </div>
       </div>
+
+      {/* About Modal Bottom Sheet */}
+      {showAbout && (
+        <div className="absolute inset-0 z-50 flex items-end justify-center bg-black/70 backdrop-blur-xs transition-all duration-300">
+          <div className="w-full rounded-t-[32px] bg-ink border-t border-white/10 p-6 text-white shadow-2xl">
+            <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-white/20" />
+            
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand">
+                <Car className="h-5 w-5 text-black" />
+              </div>
+              <div>
+                <h2 className="text-[17px] font-extrabold">Driver Link Pro</h2>
+                <p className="text-[11px] text-white/45">Version 1.0.0 (Beta)</p>
+              </div>
+            </div>
+
+            <div className="mt-5 space-y-3.5 text-[13px] leading-relaxed text-white/70">
+              <p>
+                Driver Link Pro is India's first AI-powered driver network, offering professional, on-demand drivers for your personal vehicle.
+              </p>
+              
+              <div className="rounded-2xl bg-white/5 border border-white/5 p-4">
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-brand">Live Web App Link</p>
+                <a 
+                  href="https://driver-link-app-nine.vercel.app/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="mt-1.5 block text-[13px] font-bold text-brand hover:underline break-all"
+                >
+                  https://driver-link-app-nine.vercel.app/
+                </a>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => setShowAbout(false)}
+              className="mt-6 w-full rounded-2xl bg-white/10 hover:bg-white/15 py-3.5 text-[14px] font-bold text-white transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
+
